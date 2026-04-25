@@ -111,92 +111,10 @@ Used for:
 
 ## 5. 🔄 End-to-End Flow
 #### 5.1 Authorization Code Flow (Without PKCE)
-```
-User Browser        Client App            Identity Provider (OIDC)         Token Endpoint
-     │                   │                       │                              │
-     │ 1. Access App     │                       │                              │
-     │──────────────────>│                       │                              │
-     │                   │                       │                              │
-     │ 2. Redirect to /authorize                 │                              │
-     │<──────────────────│                       │                              │
-     │──────────────────────────────────────────>│                              │
-     │   client_id, redirect_uri, scope, state   │                              │
-     │                                           │                              │
-     │ 3. Redirect to login (interaction)        │                              │
-     │<──────────────────────────────────────────│                              │
-     │                                           │                              │
-     │ 4. Submit credentials                     │                              │
-     │──────────────────────────────────────────>│                              │
-     │                                           │                              │
-     │ 5. Authentication success                 │                              │
-     │                                           │                              │
-     │ 6. Redirect with authorization code       │                              │
-     │<──────────────────────────────────────────│                              │
-     │   code=abc123                             │                              │
-     │                                           │                              │
-     │ 7. Send code to backend                   │                              │
-     │──────────────────>│                       │                              │
-     │                   │ 8. POST /token        │                              │
-     │                   │──────────────────────>│                              │
-     │                   │  grant_type=code      │                              │
-     │                   │  code=abc123          │                              │
-     │                   │  client_secret        │                              │
-     │                   │                       │                              │
-     │                   │ 9. Validate + issue tokens                           │
-     │                   │<──────────────────────│                              │
-     │                   │  access_token, id_token                              │
-     │                   │                       │                              │
-     │ 10. Access API with token                 │                              │
-     │──────────────────>│                       │                              │
-```
+![authorization code](public/oidc_auth_code_flow.png)
 
 #### 5.2 Authorization Code Flow WITH PKCE (Modern Standard)
-```
-User Browser        Client App              Identity Provider (OIDC)        Token Endpoint
-     │                   │                         │                              │
-     │                   │ 1. Generate PKCE        │                              │
-     │                   │  code_verifier          │                              │
-     │                   │  code_challenge         │                              │
-     │                   │                         │                              │
-     │ 2. Redirect to /authorize                   │                              │
-     │<──────────────────│                         │                              │
-     │───────────────────────────────────────────->│                              │
-     │  client_id                                  │                              │
-     │  redirect_uri                               │                              │
-     │  code_challenge                             │                              │
-     │  code_challenge_method=S256                 │                              │
-     │                                             │                              │
-     │ 3. Redirect to login                        │                              │
-     │<────────────────────────────────────────----│                              │
-     │                                             │                              │
-     │ 4. Submit credentials                       │                              │
-     │──────────────────────────────────────────-->│                              │
-     │                                             │                              │
-     │ 5. Auth success                             │                              │
-     │                                             │                              │
-     │ 6. Redirect with auth code                  │                              │
-     │<────────────────────────────────────────────│                              │
-     │   code=xyz789                               │                              │
-     │                                             │                              │
-     │ 7. Exchange code + verifier                 │                              │
-     │──────────────────>│                         │                              │
-     │                   │ POST /token             │                              │
-     │                   │────────────────────────>│                              │
-     │                   │ grant_type=code         │                              │
-     │                   │ code=xyz789             │                              │
-     │                   │ code_verifier=original  │                              │
-     │                   │                         │                              │
-     │                   │ 8. Verify PKCE          │                              │
-     │                   │  SHA256(verifier)       │                              │
-     │                   │  == challenge ?         │                              │
-     │                   │                         │                              │
-     │                   │ 9. Issue tokens         │                              │
-     │                   │<────────────────────────│                              │
-     │                   │ access_token, id_token  │                              │
-     │                   │                         │                              │
-     │ 10. Call API with token                     │                              │
-     │──────────────────>│                         │                              │
-```
+![authorization code with pkce](public/oidc_auth_code_with_pkce_flow.png)
 
 ## 6. 🔐 Security Design
 #### 6.1 Authentication
