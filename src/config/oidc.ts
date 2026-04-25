@@ -9,8 +9,7 @@ export const oidc = new Provider(env.ISSUER!, {
   clients: [
     {
       client_id: "test-client",
-      client_secret:
-        "9f3c8b6a7d2e4f1c8a9b0e5d7c3f2a1b6e4d9c8f7a2b3c4d5e6f7a8b9c0d1e2f",
+      client_secret: env.TEST_CLIENT_SECRET,
       redirect_uris: ["https://oidcdebugger.com/debug"],
       grant_types: ["authorization_code"],
       response_types: ["code"],
